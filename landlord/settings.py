@@ -10,8 +10,9 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+project = lambda f: os.path.join(PROJECT_ROOT, f) # use as project('db')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -83,8 +84,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+TEMPLATE_DIRS = (
+  project('templates'),
+)
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+STATIC_ROOT = project('static/') # Used with collectstatic
 STATIC_URL = '/static/'
