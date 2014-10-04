@@ -17,4 +17,4 @@ class Tenant(TimeStampedModel):
     unit = models.ForeignKey(Unit)
 
     def __unicode__(self):
-        return self.user
+        return self.user.username
