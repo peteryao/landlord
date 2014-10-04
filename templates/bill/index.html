@@ -84,6 +84,7 @@ function start_chat (access_token) {
 {% endblock sidebar %}
 
 {% block content %}
+<a href="https://api.venmo.com/v1/oauth/authorize?client_id=2010&scope=make_payments%20access_profile%20access_balance">Authorize Venmo</a>
 <h4>{{unit}}</h4>
-{{split_bill}} <a href="https://api.venmo.com/v1/oauth/authorize?client_id=2010&scope=make_payments%20access_profile%20access_balance">Venmo Me</a>
+{{split_bill}}<a href="{% url 'payment' bill_pk=original_bill.id %}">Venmo {{original_bill.user.username}} ${{split_bill.split}}</a>
 {% endblock content %}

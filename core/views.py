@@ -1,5 +1,6 @@
 import urllib2
 import json
+import requests
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -9,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 from mgmt.models import Landlord
 from unit.models import Tenant, Unit
-from bill.models import RentBill, Split_Bill
+from bill.models import RentBill, Split_Bill, Bill
 
 # Create your views here.
 def index(request):
@@ -19,7 +20,8 @@ def index(request):
     if Tenant.objects.filter(user=request.user.id).exists():
         context['unit'] = Tenant.objects.get(user=request.user.id).unit
         rent_bill = RentBill.objects.get(unit=context['unit'], has_paid=False)
-        context['split_bill'] = Split_Bill.objects.filter(original=rent_bill.bill, user=request.user.id)
+        context['split_bill'] = Split_Bill.objects.get(original=rent_bill.bill, user=request.user.id)
+        context['original_bill'] = context['split_bill'].original
         return render(request, 'bill/index.html', context)
     return render(request, 'core/index.html', context)
 
@@ -51,7 +53,15 @@ def venmo_key(request):
 
     response = urllib2.urlopen('https://api.venmo.com/v1/me?access_token={}'.format(tenant.venmo_access_token))
     data = json.load(response)
-    for point in data:
-        print point
+    print data['data']['balance']
+
+    return redirect(index)
+
+def venmo_payment(request, bill_pk):
+    tenant = Tenant.objects.get(user=request.user.id)
+    original = Bill.objects.get(pk=bill_pk)
+    bill = Split_Bill.objects.get(original=original, user=request.user.id)
+    payload = {'access_token': tenant.venmo_access_token,'email': original.user.email, 'amount': 0.01, 'note': 'First Test Run'}
+    r = requests.post('https://api.venmo.com/v1/payments',data=payload)
 
     return redirect(index)
