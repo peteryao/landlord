@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'core',
     'unit',
     'bill',
+    'mgmt',
 )
 
 MIDDLEWARE_CLASSES = (
