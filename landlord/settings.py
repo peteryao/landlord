@@ -92,6 +92,8 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
     'core.context_processor.landlord_units',
 )
+
+MOXTRA_AUTH_REDIRECT = 'http://localhost:8000/moxtra/redirect_check/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_ROOT = project('static/') # Used with collectstatic

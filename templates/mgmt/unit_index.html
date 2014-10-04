@@ -1,7 +1,11 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h4>{{unit}}</h4>w${{unit.rent}}
+<h4>{{unit}}</h4>${{unit.rent}}
+
+    {% for split in split_bill %}
+        <div>${{split.split}} - {{split.user.username}}</div>
+    {% endfor %}
 {% endblock content %}
 
 {% block sidebar %}

@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% endblock content %}
+
+{% block sidebar %}
+<h4>THIS WILL BE CHAT</h4>
+<iframe id="chat_test"></iframe>
+{% endblock sidebar %}
+
+{% block script %}
+<script type="text/javascript" src="https://www.moxtra.com/api/js/moxtra-latest.js" id="moxtrajs" data-client-id="ulPImqICqYs"></script>
+<script type="text/javascript">
+var options = {
+    unique_id: "unique_id_02,unique_id_03",
+    iframe: true,
+    tagid4iframe: "chat_test",
+    iframewidth: "820px",
+    iframeheight: "450px",
+    autostart_meet: true,
+    autostart_note: false,
+    start_chat: function(event) {
+        alert("Chat started session Id: " + event.session_id);
+    },
+    invite_meet: function(event) {
+        alert("Meet invite");
+    },
+    start_meet: function(event) {
+        alert("Meet started session key: " + event.session_key + " session id: " + event.session_id);
+    },
+    end_meet: function(event) {
+        alert("Meet end event");
+    },
+    invite_member: function(event) {
+        alert("Invite member into binder Id: " + event.binder_id);
+    },
+    request_note: function(event) {
+        alert("Note start request");
+    },
+    error: function(event) {
+        alert("Chat error code: " + event.error_code + " error message: " + event.error_message);
+    }
+};
+Moxtra.chat(options);
+
+</script>
+{% endblock script %}

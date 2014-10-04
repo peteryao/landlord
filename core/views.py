@@ -10,10 +10,11 @@ from unit.models import Tenant, Unit
 # Create your views here.
 def index(request):
     context = {}
-    if Landlord.objects.filter(user=request.user).exists():
-        return render(request, 'mgmt/index.html', context)
-    if Tenant.objects.filter(user=request.user).exists():
-        pass
+    if request.user.is_authenticated:
+        if Landlord.objects.filter(user=request.user.id).exists():
+            return render(request, 'mgmt/index.html', context)
+        if Tenant.objects.filter(user=request.user.id).exists():
+            return render(request, 'bill/index.html', context)
     return render(request, 'core/index.html', context)
 
 def login_user(request):
