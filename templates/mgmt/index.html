@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+asdf
+{% endblock content %}
+
+{% block sidebar %}
+<ul class="nav nav-sidebar">
+    {% for unit in units %}
+    <li><a href="">{{unit}}</a></li>
+    {% endfor %}
+</ul>
+{% endblock sidebar %}
