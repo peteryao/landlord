@@ -92,3 +92,5 @@ TEMPLATE_DIRS = (
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_ROOT = project('static/') # Used with collectstatic
 STATIC_URL = '/static/'
+MEDIA_ROOT = project('media')
+MEDIA_URL = '/media/'
