@@ -12,4 +12,13 @@ class Bill(TimeStampedModel):
     debt_type = models.CharField(max_length=24, choices=(('Rent', 'Rent'), ('Utilities', 'Utilities')), default='Rent')
 
     def __unicode__(self):
-        return self.name
+        return "{} - {}".format(self.user.username, self.value)
+
+class Split_Bill(TimeStampedModel):
+    original = models.ForeignKey(Bill)
+    user = models.ForeignKey(User)
+    split = models.DecimalField(max_digits=7, decimal_places=2)
+    has_paid = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.user.username, self.split)
