@@ -44,3 +44,7 @@ def moxtra_redirect(request):
 
     return render(request, 'bill/moxtra_redirect.html', context)
 
+def mtest(request):
+    context = {}
+
+    return render(request, 'bill/index.html', context)

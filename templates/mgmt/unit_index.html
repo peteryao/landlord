@@ -9,9 +9,9 @@
 {% endblock content %}
 
 {% block sidebar %}
-<div class="forloop">
+<div class="nav nav-pills nav-stacked">
     {% for x in units %}
-    <a href="{% url 'single_unit' unit_pk=x.id %}" class="list-group-item{% if unit.pk == x.pk %} class="active"{% else %}"{% endif %}>{{x}}</a>
+    <li><a href="{% url 'single_unit' unit_pk=x.id %}" class="list-group-item{% if unit.pk == x.pk %} class="active"{% else %}"{% endif %}>{{x}}</a></li>
     {% endfor %}
 </div>
 {% endblock sidebar %}

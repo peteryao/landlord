@@ -5,6 +5,6 @@ from . import views
 pk = r'(?P<unit_pk>\d+)'
 user_pk = r'(?P<user_pk>\d+)'
 
-urlpatterns = patterns('esport',
+urlpatterns = patterns('',
     url(r'^unit/{}/$'.format(pk), views.unit_index, name='single_unit'),
  )

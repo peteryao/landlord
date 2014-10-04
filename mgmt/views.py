@@ -12,7 +12,7 @@ from bill.models import Bill, Split_Bill, RentBill
 def unit_index(request, unit_pk):
     context = {}
     unit = Unit.objects.get(pk=unit_pk)
+    rent_bill = RentBill.objects.get(unit=unit, has_paid=False)
+    context['split_bills'] = Split_Bill.objects.filter(original=rent_bill.bill)
     context['unit'] = unit
-    rent = RentBill.objects.get(unit=unit, has_paid=False)
-    context['split_bill'] = Split_Bill.objects.filter(original=rent.bill)
     return render(request, 'mgmt/unit_index.html', context)

@@ -5,9 +5,10 @@
 {% endblock content %}
 
 {% block sidebar %}
-<div class="forloop">
+<div>
+<ul class="nav nav-pills">
     {% for unit in units %}
-    <a href="{% url 'single_unit' unit_pk=unit.id %}" class="list-group-item{% if forloop.first %} class="active"{% else %}"{% endif %}>{{unit}}</a>
+    <li><a href="{% url 'single_unit' unit_pk=unit.id %}" class="list-group-item{% if forloop.first %} class="active"{% else %}"{% endif %}>{{unit}}</a></li>
     {% endfor %}
 </div>
 {% endblock sidebar %}

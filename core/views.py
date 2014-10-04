@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from mgmt.models import Landlord
 from unit.models import Tenant, Unit
+from bill.models import RentBill, Split_Bill
 
 # Create your views here.
 def index(request):
@@ -14,6 +15,9 @@ def index(request):
         if Landlord.objects.filter(user=request.user.id).exists():
             return render(request, 'mgmt/index.html', context)
         if Tenant.objects.filter(user=request.user.id).exists():
+            context['unit'] = Tenant.objects.get(user=request.user.id).unit
+            rent_bill = RentBill.objects.get(unit=context['unit'], has_paid=False)
+            context['split_bills'] = Split_Bill.objects.filter(original=rent_bill.bill)
             return render(request, 'bill/index.html', context)
     return render(request, 'core/index.html', context)
 
