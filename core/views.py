@@ -1,3 +1,6 @@
+import urllib2
+import json
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
@@ -11,19 +14,13 @@ from bill.models import RentBill, Split_Bill
 # Create your views here.
 def index(request):
     context = {}
-    try:
-        if request.GET['access_token']:
-            print request.GET['access_token']
-    except:
-        pass
-    if request.user.is_authenticated:
-        if Landlord.objects.filter(user=request.user.id).exists():
-            return render(request, 'mgmt/index.html', context)
-        if Tenant.objects.filter(user=request.user.id).exists():
-            context['unit'] = Tenant.objects.get(user=request.user.id).unit
-            rent_bill = RentBill.objects.get(unit=context['unit'], has_paid=False)
-            context['split_bill'] = Split_Bill.objects.filter(original=rent_bill.bill, user=request.user.id)
-            return render(request, 'bill/index.html', context)
+    if Landlord.objects.filter(user=request.user.id).exists():
+        return render(request, 'mgmt/index.html', context)
+    if Tenant.objects.filter(user=request.user.id).exists():
+        context['unit'] = Tenant.objects.get(user=request.user.id).unit
+        rent_bill = RentBill.objects.get(unit=context['unit'], has_paid=False)
+        context['split_bill'] = Split_Bill.objects.filter(original=rent_bill.bill, user=request.user.id)
+        return render(request, 'bill/index.html', context)
     return render(request, 'core/index.html', context)
 
 def login_user(request):
@@ -45,4 +42,16 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     messages.add_message(request, messages.INFO, "You have been logged out.")
+    return redirect(index)
+
+def venmo_key(request):
+    tenant = Tenant.objects.get(user=request.user.id)
+    tenant.venmo_access_token = request.GET['access_token']
+    tenant.save()
+
+    response = urllib2.urlopen('https://api.venmo.com/v1/me?access_token={}'.format(tenant.venmo_access_token))
+    data = json.load(response)
+    for point in data:
+        print point
+
     return redirect(index)
