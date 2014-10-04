@@ -2,6 +2,10 @@ from datetime import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.signals import request_finished
+from django.dispatch import receiver
+
+from paypal.standard.ipn.signals import payment_was_successful
 
 from core.models import TimeStampedModel
 from unit.models import Unit
@@ -30,3 +34,12 @@ class Split_Bill(TimeStampedModel):
 
     def __unicode__(self):
         return "{} - {}".format(self.user.username, self.split)
+
+def show_me_the_money(sender, **kwargs):
+    ipn_obj = sender
+    # You need to check 'payment_status' of the IPN
+
+    if ipn_obj.payment_status == "Completed":
+        print "yay"
+
+payment_was_successful.connect(show_me_the_money)

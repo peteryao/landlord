@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'paypal.standard.ipn',
     'core',
     'unit',
     'bill',
@@ -84,6 +85,12 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+PAYPAL_RECEIVER_EMAIL = "charlietle@yahoo.com"
+# For installations on which you want to use the sandbox,
+# set PAYPAL_TEST to True.  Ensure PAYPAL_RECEIVER_EMAIL is set to
+# your sandbox account email too.
+PAYPAL_TEST = True
 
 TEMPLATE_DIRS = (
   project('templates'),
