@@ -11,9 +11,28 @@ from unit.models import Tenant, Unit
 def index(request):
     context = {}
     if Landlord.objects.filter(user=request.user).exists():
-        landlord = Landlord.objects.get(user=request.user)
-        context['units'] = Unit.objects.filter(apartment=landlord.apartment)
         return render(request, 'mgmt/index.html', context)
     if Tenant.objects.filter(user=request.user).exists():
         pass
     return render(request, 'core/index.html', context)
+
+def login_user(request):
+    username = request.POST['user_name']
+    password = request.POST['user_password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            messages.add_message(request, messages.INFO, "Welcome back <strong>" + request.user.username + "</strong>!")
+            return redirect(index)
+        else:
+            messages.add_message(request, messages.WARNING, "<strong>Error</strong>. Your account has been disabled, please contact Peter Yao.")
+            return redirect(index)
+    else:
+        messages.add_message(request, messages.WARNING, "<strong>Error</strong>. This username/password combination is invalid. Please try again.")
+        return redirect(index)
+
+def logout_user(request):
+    logout(request)
+    messages.add_message(request, messages.INFO, "You have been logged out.")
+    return redirect(index)

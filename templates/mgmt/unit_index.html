@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h4>{{unit}}</h4>w${{unit.rent}}
+{% endblock content %}
+
+{% block sidebar %}
+<div class="forloop">
+    {% for x in units %}
+    <a href="{% url 'single_unit' unit_pk=x.id %}" class="list-group-item{% if unit.pk == x.pk %} class="active"{% else %}"{% endif %}>{{x}}</a>
+    {% endfor %}
+</div>
+{% endblock sidebar %}

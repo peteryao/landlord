@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'esports_management.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^', include('core.urls')),
+    url(r'^', include('mgmt.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

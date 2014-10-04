@@ -14,6 +14,13 @@ class Bill(TimeStampedModel):
     def __unicode__(self):
         return "{} - {}".format(self.user.username, self.value)
 
+class RentBill(TimeStampedModel):
+    bill = models.ForeignKey(Bill)
+    unit = models.ForeignKey(Unit)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.unit.name, self.bill.value)
+
 class Split_Bill(TimeStampedModel):
     original = models.ForeignKey(Bill)
     user = models.ForeignKey(User)

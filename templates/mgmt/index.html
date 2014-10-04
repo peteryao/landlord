@@ -1,13 +1,13 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-asdf
+<h4>Recent Updates</h4>
 {% endblock content %}
 
 {% block sidebar %}
-<ul class="nav nav-sidebar">
+<div class="forloop">
     {% for unit in units %}
-    <li><a href="">{{unit}}</a></li>
+    <a href="{% url 'single_unit' unit_pk=unit.id %}" class="list-group-item{% if forloop.first %} class="active"{% else %}"{% endif %}>{{unit}}</a>
     {% endfor %}
-</ul>
+</div>
 {% endblock sidebar %}

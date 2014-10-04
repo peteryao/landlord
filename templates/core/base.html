@@ -16,6 +16,8 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ STATIC_URL }}css/dashboard.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap-modal-bs3patch.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap-modal.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -39,7 +41,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Landlord</a>
+          <a class="navbar-brand" href="{% url 'index' %}">Landlord</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -47,30 +49,76 @@
             <li><a href="#">Settings</a></li>
             <li><a href="#">Profile</a></li>
             <li><a href="#">Help</a></li>
+            {% if not user.is_authenticated %}<li><a href="{% url 'login' %}" data-toggle="modal" data-target="#login_modal">Login</a></li>
+            {% else %}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user}} <b class="caret 2"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="">User Settings</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+            </li>{% endif %}
           </ul>
         </div>
       </div>
     </div>
 
     <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{message.tags}} alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{message | safe}}
+      </div>
+      {% endfor %}
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
         {% block sidebar %}{% endblock sidebar %}
         </div>
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
           {% block content %}{% endblock content %}
         </div>
       </div>
     </div>
 
+    {% if not user.is_authenticated %}
+    <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="login_modal_label" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="login_modal_label">Login</h4>
+        </div>
+        <form class="form-horizontal" role="form" action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="user_name" class="col-sm-2 control-label">Username</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Username">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="user_password" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Password">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endif %}
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}docs.min.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-modalmanager.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{{ STATIC_URL }}js/ie10-viewport-bug-workaround.js"></script>
   </body>

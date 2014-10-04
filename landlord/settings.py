@@ -88,6 +88,10 @@ USE_TZ = True
 TEMPLATE_DIRS = (
   project('templates'),
 )
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+    'core.context_processor.landlord_units',
+)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_ROOT = project('static/') # Used with collectstatic
