@@ -174,9 +174,9 @@ function start_chat (access_token) {
 	        {% for bill in tenant_bills %}
 	        <tr{% if bill.original.late_check %} class="danger"{% elif bill.original.warning_time %} class="warning"{% endif %}>
 	          <td><img class="circular" src="{{tenant.venmo_photo}}"/></td>
-	          <td>{{bill.original.debt_type}}</td>
+	          <td>{{bill.original.reason}}</td>
 	          <td>${{bill.split}}</td>
-	          <td>{{bill.original.date_due}}
+	          <td>{{bill.original.debt_typedate_due}}
 	          <td><a href="#" alt="Pay the debt."><img style="float:right;width:50px" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a></td>
 	        </tr>
 	        {% endfor %}
@@ -186,7 +186,7 @@ function start_chat (access_token) {
 	          <td>{{todo.name}}</td>
 	          <td></td>
 	          <td>{{todo.due_date}}</td>
-	          <td><button type="button" class="btn btn-default btn-lg pull-right"><span class="glyphicon glyphicon-ok"></span></button></td>
+	          <td><a href="" data-toggle="modal" data-target="#finish-todo-{{todo.id}}" type="button" class="btn btn-default btn-lg pull-right"><span class="glyphicon glyphicon-ok"></span></button></td>
 	        </tr>
 	        {% endfor %}
 	      </tbody>
@@ -232,6 +232,43 @@ function start_chat (access_token) {
     </form>
   </div>
 </div>
+
+{% for todo in unit_todo_list %}
+<div class="modal fade" id="finish-todo-{{todo.id}}" tabindex="-1" role="dialog" aria-labelledby="finish-todo-{{todo.id}}" aria-hidden="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="add_task_label">Charge Bill</h4>
+    </div>
+    <form class="form-horizontal" role="form" action="{% url 'finish_todo' todo_pk=todo.id %}" method="POST">
+      {% csrf_token %}
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="amount" class="col-sm-2 control-label">Amount</label>
+          <div class="col-sm-10">
+            <input type="number" step="any" class="form-control" id="amount" name="amount" placeholder="0.00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="text" class="col-sm-2 control-label">Notes</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="name" name="name" value="{{todo.name}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="text" id="date_due" name="date_due" class="col-sm-2 control-label">Due Date</label>
+          <div class="col-sm-10">
+            <input id="date_due" name="date_due" data-provide="datepicker">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button submit" class="btn btn-primary">Add</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
 {% endblock content %}
 
 {% block sidebar %}
