@@ -20,6 +20,7 @@ class Tenant(TimeStampedModel):
     unit = models.ForeignKey(Unit)
     venmo_access_token = models.CharField(max_length=128, default="NULL")
     venmo_photo = models.URLField(blank=True, default="")
+    venmo_credit = models.DecimalField(max_digits=7, decimal_places=2, default=0)
 
     def __unicode__(self):
         return self.user.username

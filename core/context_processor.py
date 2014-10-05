@@ -26,3 +26,21 @@ def unit_todo_list(request):
             tenant = Tenant.objects.get(user=request.user.id)
             return {'unit_todo_list' : ToDoTask.objects.filter(unit=tenant.unit.id, is_complete=False)}
     return {'failure' : ()}
+
+def tenant_total(request):
+    if request.user.is_authenticated():
+         if Tenant.objects.filter(user=request.user.id).exists():
+            tenant = Tenant.objects.get(user=request.user.id)
+            print Split_Bill.objects.filter(user=1)
+            return {'tenant_total' : Split_Bill.objects.filter(user=request.user.id)}
+    return {'failure' : ()}
+
+def total_tenant_transactions(request):
+    if request.user.is_authenticated():
+         if Tenant.objects.filter(user=request.user.id).exists():
+            tenant = Tenant.objects.get(user=request.user.id)
+            sum_total = 0
+            for bill in Split_Bill.objects.filter(user=request.user.id, has_paid=True):
+                sum_total += bill.split
+            return {'total_tenant_transactions' : sum_total}
+    return {'failure' : ()}

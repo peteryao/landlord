@@ -56,6 +56,8 @@ def venmo_key(request):
 
     response = urllib2.urlopen('https://api.venmo.com/v1/me?access_token={}'.format(tenant.venmo_access_token))
     data = json.load(response)
+    print data
+    tenant.venmo_credit = data['data']['balance']
     tenant.venmo_photo = data['data']['user']['profile_picture_url']
     tenant.save()
     return redirect(index)
