@@ -1,3 +1,7 @@
+import urllib2
+import json
+import requests
+
 from datetime import datetime, timedelta
 
 from django.shortcuts import render, redirect
@@ -65,3 +69,18 @@ def finish_todo(request, todo_pk):
         final_split.save()
 
     return redirect('/')
+
+@login_required
+def venmo_bill_payment(request, bill_pk):
+    bill = Split_Bill.objects.get(pk=bill_pk)
+    tenant = Tenant.objects.get(user=request.user.id)
+    original = bill.original
+    payload = {'access_token': tenant.venmo_access_token,'email': original.user.email, 'amount': 0.01, 'note': original.reason}
+
+    r = requests.post('https://api.venmo.com/v1/payments',data=payload)
+
+    bill.has_paid = True
+    bill.save()
+    messages.add_message(request, messages.INFO, "You just paid <strong>" + original.user.email + "</strong> for " + str(bill.split) +".")
+    return redirect('/')
+

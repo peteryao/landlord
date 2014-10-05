@@ -47,4 +47,4 @@ class Split_Bill(TimeStampedModel):
     has_paid = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "{} - {} ({})".format(self.user.username, self.split, self.has_paid)
+        return "{} - {} ({})".format(self.user.username, self.split, self.has_paidhas)
