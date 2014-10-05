@@ -6,19 +6,22 @@ if RentBill.objects.filter(unit=context['unit'], has_paid=False).exists():
     context['original_bill'] = context['split_bill'].original
      -->
 
+{% extends 'core/base.html' %}
+
+{% block style %}
 <style>
 	.row .col-md-4 {
-		border: 1px solid rgba(86,61,124,.2);
+		/*border: 1px solid rgba(86,61,124,.2);*/
 	}
 
 	.row .col-md-8 {
-		border: 1px solid rgba(86,61,124,.2);
+		/*border: 1px solid rgba(86,61,124,.2);*/
 	}
 
 /*https://coderwall.com/p/z87nsq*/
 	.circular {
-		width: 100px;
-		height: 100px;
+		width: 50px;
+		height: 50px;
 		background-size: cover;
 		display: inline-block;
 		float: left;
@@ -33,49 +36,79 @@ if RentBill.objects.filter(unit=context['unit'], has_paid=False).exists():
 		vertical-align: middle;
 	}
 </style>
-
-{% extends 'core/base.html' %}
+{% endblock style %}
 
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-4">
-			<h2>$1234.56</h2> <br />
-			<h3>Balance</h3>
+		<div class="col-md-3">
+			{% if not venmo_access_token %}
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Current Balance</h3>
+			  </div>
+			  <div class="panel-body">
+			    $1234.56
+			  </div>
+			</div>
+			{% else %}
+			<a href="https://api.venmo.com/v1/oauth/authorize?client_id=2010&scope=make_payments%20access_profile%20access_balance">Authorize Venmo</a>
+			{% endif %}
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Total Transaction</h3>
+			  </div>
+			  <div class="panel-body">
+			    $1234.56
+			  </div>
+			</div>
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Transaction Count</h3>
+			  </div>
+			  <div class="panel-body">
+			    12,456
+			  </div>
+			</div>
 		</div>
-		<div class="col-md-8" style="float:right">
-			<div class="row">
-				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
-				<h2 class="debt-name">Rent</h2>
-				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
-			</div>
-			<div class="row">
-				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
-				<h2 class="debt-name">Rent</h2>
-				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
-			</div>
-			<div class="row">
-				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
-				<h2 class="debt-name">Rent</h2>
-				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
-			</div>
-			<div class="row">
-				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
-				<h2 class="debt-name">Rent</h2>
-				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4">
-			<h2>$1234.56</h2> <br />
-			<h3>Total Transaction</h3>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4">
-			<h2>12,456</h2> <br />
-			<h3>Transaction Count</h3>
+
+		<div class="col-md-9">
+		<table class="table">
+	      <thead>
+	        <tr>
+	          <th></th>
+	          <th>Reason</th>
+	          <th>Ammount</th>
+	          <th></th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        <tr class="active">
+	          <td><img class="circular" src="{{tenant.venmo_photo}}"/></td>
+	          <td>Column content</td>
+	          <td>Column content</td>
+	          <td><a href="#" alt="Pay the debt."><img style="float:right;width:50px" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a></td>
+	        </tr>
+	        <tr>
+	          <td><img class="circular" src="{{tenant.venmo_photo}}"/></td>
+	          <td>Column content</td>
+	          <td>Column content</td>
+	          <td><a href="#" alt="Pay the debt."><img style="float:right;width:50px" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a></td>
+	        </tr>
+	        <tr class="success">
+	          <td><img class="circular" src="{{tenant.venmo_photo}}"/></td>
+	          <td>Column content</td>
+	          <td>Column content</td>
+	          <td><a href="#" alt="Pay the debt."><img style="float:right;width:50px" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a></td>
+	        </tr>
+	        <tr>
+	          <td><img class="circular" src="{{tenant.venmo_photo}}"/></td>
+	          <td>Column content</td>
+	          <td>Column content</td>
+	          <td><a href="#" alt="Pay the debt."><img style="float:right;width:50px" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a></td>
+	        </tr>
+	      </tbody>
+	    </table>
 		</div>
 	</div>
 </div>

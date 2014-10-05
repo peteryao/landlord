@@ -15,15 +15,16 @@ from bill.models import RentBill, Split_Bill, Bill
 # Create your views here.
 def index(request):
     context = {}
-    
+
     # If landlord
     if Landlord.objects.filter(user=request.user.id).exists():
         return render(request, 'mgmt/index.html', context)
-        
+
     # If tenant
     if Tenant.objects.filter(user=request.user.id).exists():
+        context['tenant'] = Tenant.objects.get(user=request.user.id)
         return render(request, 'unit/index.html', context)
-        
+
     # Not logged in
     return render(request, 'core/index.html', context)
 
@@ -55,8 +56,8 @@ def venmo_key(request):
 
     response = urllib2.urlopen('https://api.venmo.com/v1/me?access_token={}'.format(tenant.venmo_access_token))
     data = json.load(response)
-    print data['data']['balance']
-
+    tenant.venmo_photo = data['data']['user']['profile_picture_url']
+    tenant.save()
     return redirect(index)
 
 def venmo_payment(request, bill_pk):
