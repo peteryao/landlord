@@ -26,7 +26,7 @@ def index(request):
         return render(request, 'unit/index.html', context)
 
     # Not logged in
-    return render(request, 'core/index.html', context)
+    return render(request, 'landing/index.html', context)
 
 def login_user(request):
     username = request.POST['user_name']
