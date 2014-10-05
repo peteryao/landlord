@@ -164,7 +164,8 @@ function start_chat (access_token) {
 	      </thead>
 	      <tbody>
 	        {% for bill in tenant_bills %}
-	        <tr>
+	        {{bill.warning_time}}
+	        <tr{% if bill.warning_time %} class="warning"{% endif %}>
 	          <td><img class="circular" src="{{tenant.venmo_photo}}"/></td>
 	          <td>{{bill.original.debt_type}}</td>
 	          <td>${{bill.split}}</td>

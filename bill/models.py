@@ -13,6 +13,20 @@ class Bill(TimeStampedModel):
     value = models.DecimalField(max_digits=7, decimal_places=2)
     debt_type = models.CharField(max_length=24, choices=(('Rent', 'Rent'), ('Utilities', 'Utilities')), default='Rent')
     date_due = models.DateField(default=datetime.now()+timedelta(days=7))
+    is_paid = models.BooleanField(default=False)
+
+    def _warning_time(self):
+        # if datetime.now()+timedelta(7) > self.date_due:
+        return True
+        # return False
+
+    def _late(self):
+        if datetime.now() > self.date_due:
+            return True
+        return False
+
+    warning_time = property(_warning_time)
+    late_check = property(_late)
 
     def __unicode__(self):
         return "{} - {} ({})".format(self.user.username, self.value, self.debt_type)
@@ -21,7 +35,6 @@ class RentBill(TimeStampedModel):
     bill = models.ForeignKey(Bill)
     unit = models.ForeignKey(Unit)
     has_paid = models.BooleanField(default=False)
-    date_due = models.DateField(default=datetime.now()+timedelta(days=7))
 
     def __unicode__(self):
         return "{} - {}".format(self.unit.name, self.bill.value)
