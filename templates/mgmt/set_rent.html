@@ -11,7 +11,7 @@
     <tbody>
         {% for tenant in unit_tenants %}
         <tr>
-            <td><label for="rent_{{tenant.id}}" class="multilabel">{{tenant}} - {{tenant.user.email}}</label></td>
+            <td><label for="rent_{{tenant.id}}" class="multilabel">{{tenant}}</label></td>
             <td>
             <div ng-controller="TodoCtrl{{tenant.id}}">
                 <div class="form-group">
@@ -37,10 +37,16 @@
 
 {% block sidebar %}
 <div>
-    <ul class="nav nav-pills">
-    {% for unit in units %}
-        <li{% if unit.id == active_unit.id %} class="active"{% endif %}><a href="{% url 'single_unit' unit_pk=unit.id %}" class="list-group-item{% if forloop.first %} class="active"{% else %}"{% endif %}>{{unit}}</a></li>
-    {% endfor %}
+{% for tenant in unit_tenants %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{tenant}}</h3>
+  </div>
+  <div class="panel-body">
+    {{tenant.user.email}}
+  </div>
+</div>
+{% endfor %}
 </div>
 {% endblock sidebar %}
 

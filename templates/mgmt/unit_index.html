@@ -1,49 +1,184 @@
+<!-- context['unit'] = Tenant.objects.get(user=request.user.id).unit
+
+if RentBill.objects.filter(unit=context['unit'], has_paid=False).exists():
+    rent_bill = RentBill.objects.get(unit=context['unit'], has_paid=False)
+    context['split_bill'] = Split_Bill.objects.get(original=rent_bill.bill, user=request.user.id)
+    context['original_bill'] = context['split_bill'].original
+     -->
+
 {% extends 'core/base.html' %}
 
+
+{% block script %}
+<script type="text/javascript" src="https://www.moxtra.com/api/js/moxtra-latest.js" id="moxtrajs" data-client-id="ulPImqICqYs"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+
+<!-- Create Signature -->
+<script type="text/javascript">// <![CDATA[
+    var client_id = "ulPImqICqYs";
+    var client_secret = "mKB98J9rKRM";
+    var timestamp = new Date().getTime();
+    var unique_id = "laksjdfl"; //Unique ID of how user is identified in your system
+
+    var hash = CryptoJS.HmacSHA256(client_id + unique_id + timestamp, client_secret);
+    var hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+    var signature = hashInBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+    // ]]>
+</script>
+
+<!-- Initialize user and get access token -->
+<script type="text/javascript">
+    function get_token() {
+        var init_options = {
+            uniqueid: unique_id,
+            firstname: "John",
+            lastname: "Doe",
+            timestamp: timestamp,
+            signature: signature,
+            get_accesstoken: function(result) {
+                console.log("access_token: " + result.access_token + " expires in: " + result.expires_in);
+                start_chat(result.access_token);
+            },
+            error: function(result) {
+                console.log("error code: " + result.error_code + " message: " + result.error_message);
+            }
+        };
+        Moxtra.setup(init_options);
+    }
+</script>
+
+<!-- Start Chat Function -->
+<script type="text/javascript">
+function start_chat (access_token) {
+    var chat_options = {
+        //unique id of the users who will be part of the chat. These users should already exist in Moxtra.
+        unique_id:"unique_user_id",
+        iframe: false,
+        tagid4iframe: "chat_container",
+        iframewidth: "432px",
+        iframeheight: "500px",
+        access_token: access_token,
+        autostart_meet: true,
+        autostart_note: true,
+        extension: { "show_dialogs": { "member_invite": true } },
+        start_chat: function(event) {
+            console.log("Chat started binder ID: " + event.binder_id);
+            //Your application server can upload files to draw using the binder_id and access_token
+        },
+        start_meet: function(event) {
+            console.log("Meet started session key: " + event.session_key + " session id: " + event.session_id);
+        },
+        end_meet: function(event) {
+            console.log("Meet end event");
+        },
+        invite_member: function(event) {
+            console.log("Invite member into binder Id: " + event.binder_id);
+        },
+        request_note: function(event) {
+            console.log("Note start request");
+        },
+        error: function(event) {
+            console.log("Chat error code: " + event.error_code + " error message: " + event.error_message);
+        }
+    };
+    Moxtra.chat(chat_options);
+}
+</script>
+
+<script src="{{ STATIC_URL }}js/bootstrap-datepicker.js"></script>
+<script type="text/javascript">$('.datepicker').datepicker({
+    format: 'mm/dd/yyyy',
+    startDate: '-3d'
+})</script>
+{% endblock script %}
+
+{% block style %}
+<style>
+    .row .col-md-4 {
+        /*border: 1px solid rgba(86,61,124,.2);*/
+    }
+
+    .row .col-md-8 {
+        /*border: 1px solid rgba(86,61,124,.2);*/
+    }
+
+/*https://coderwall.com/p/z87nsq*/
+    .circular {
+        width: 50px;
+        height: 50px;
+        background-size: cover;
+        display: inline-block;
+        float: left;
+        border-radius: 50px;
+        -webkit-border-radius: 50px;
+        -moz-border-radius: 50px;
+    }
+
+    /*http://stackoverflow.com/questions/13596821/css-align-images-and-text-on-same-line*/
+    .debt-name {
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+<link href="{{ STATIC_URL }}css/datepicker3.css" rel="stylesheet">
+{% endblock style %}
+
 {% block content %}
-<h4>{{unit}}</h4>${{unit.rent}}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Unit {{unit.name}}</h3>
+              </div>
+              <div class="panel-body">
+              Rent - ${{unit.rent}}
+              </div>
+            </div>
+            {% for tenant in unit_tenants %}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">{{tenant}}</h3>
+              </div>
+              <div class="panel-body">
+                {{tenant.user.email}}
+              </div>
+            </div>
+            {% endfor %}
+        </div>
 
-    {% for split in split_bill %}
-        <div>${{split.split}} - {{split.user.username}}</div>
-    {% endfor %}
-    <a class="btn btn-primary pull-right" href="{% url 'managment_set_rent' unit_pk=unit.id %}" role="button">Update Rent</a>
-
-
-<div>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Rent</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for tenant, split_bill in tenant_rent %}
-        <tr>
-            <td>{{tenant}}</td>
-            <td>{{tenant.user.email}}</td>
-            <td>${{split_bill.split}}</td>
-        </tr>
-    {% endfor %}
-        <tr>
-            <td></td>
-            <td></td>
-            <td>Total = <br><strong>${{unit.rent}}</strong></td>
-        </tr>
-    </tbody>
-</table>
+        <div class="col-md-9">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Email</th>
+              <th>Rent</th>
+              <th>Date Paid</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tenant, split_bill  in tenant_rent %}
+            <tr{% if split_bill.has_paid %} class="success"{% endif %}>
+              <td><img class="circular" src="{{tenant.venmo_photo}}"/></td>
+              <td>{{tenant.user.email}}</td>
+              <td>${{split_bill.split}}</td>
+              <td>{% if split_bill.has_paid %}{{split_bill.modified}}{% else %}{{split_bill.original.debt_typedate_due}} {% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="{% url 'managment_set_rent' unit_pk=unit.id %}"><button type="button" class="btn btn-success btn-button pull-right">Update Rent</button></a>
+        </div>
+    </div>
 </div>
+<div id="fb-root">
+<iframe id="chat_container" frameborder="0" allowtransparency="true" allowfullscreen="true" style="overflow: scroll; width: 100%; height: 100%; border: none; background-color: transparent;"></iframe></div>
 {% endblock content %}
 
 {% block sidebar %}
-<div class="row">
-    <ul class="nav nav-sidebar">
-        {% for x in units %}
-        <li{% if x.id = unit.id %} class="active"{% endif %}>
-            <a href="{% url 'single_unit' unit_pk=x.id %}">Unit {{x}}</a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+<a id="getToken" href="javascript:get_token();"><button type="button" class="btn btn-primary btn-lg btn-block">Enter Group Chat</button></a>
+
 {% endblock sidebar %}

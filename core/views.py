@@ -18,6 +18,18 @@ def index(request):
 
     # If landlord
     if Landlord.objects.filter(user=request.user.id).exists():
+        updates = []
+        unit_found = []
+        landlord = Landlord.objects.get(user=request.user)
+        units_owned = Unit.objects.filter(apartment=landlord.apartment)
+        for unit in units_owned:
+            unit_found = unit
+            for rent_bill in RentBill.objects.filter(unit=unit):
+                for rent_split in Split_Bill.objects.filter(original=rent_bill.bill):
+                    if rent_split.has_paid:
+                        updates.append(rent_split)
+        context['updates'] = updates
+        updates = Split_Bill.objects.filter(original = request.user)
         return render(request, 'mgmt/index.html', context)
 
     # If tenant

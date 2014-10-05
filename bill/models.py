@@ -17,7 +17,6 @@ class Bill(TimeStampedModel):
 
     def _warning_time(self):
         if datetime.now().date()+timedelta(days=7) > self.date_due:
-            print "asdf"
             return True
         return False
 
@@ -47,4 +46,4 @@ class Split_Bill(TimeStampedModel):
     has_paid = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "{} - {} ({})".format(self.user.username, self.split, self.has_paidhas)
+        return "{} - {} ({})".format(self.user.username, self.split, self.has_paid)
