@@ -30,7 +30,7 @@ class Bill(TimeStampedModel):
     late_check = property(_late)
 
     def __unicode__(self):
-        return "{} - {} ({})".format(self.user.username, self.value, self.debt_type)
+        return "{} - {} ({})".format(self.user.username, self.value, self.reason)
 
 class RentBill(TimeStampedModel):
     bill = models.ForeignKey(Bill)
