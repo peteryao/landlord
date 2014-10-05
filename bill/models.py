@@ -16,12 +16,13 @@ class Bill(TimeStampedModel):
     is_paid = models.BooleanField(default=False)
 
     def _warning_time(self):
-        # if datetime.now()+timedelta(7) > self.date_due:
-        return True
-        # return False
+        if datetime.now().date()+timedelta(days=7) > self.date_due:
+            print "asdf"
+            return True
+        return False
 
     def _late(self):
-        if datetime.now() > self.date_due:
+        if datetime.now().date() > self.date_due:
             return True
         return False
 

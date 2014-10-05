@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -28,5 +28,6 @@ class ToDoTask(TimeStampedModel):
     name = models.CharField(max_length=200)
     unit = models.ForeignKey(Unit)
     is_complete = models.BooleanField(default=False)
+    due_date = models.DateField(default=datetime.now()+timedelta(days=7))
     def __unicode__(self):
         return self.name
