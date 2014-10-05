@@ -1,7 +1,84 @@
+<!-- context['unit'] = Tenant.objects.get(user=request.user.id).unit
+
+if RentBill.objects.filter(unit=context['unit'], has_paid=False).exists():
+    rent_bill = RentBill.objects.get(unit=context['unit'], has_paid=False)
+    context['split_bill'] = Split_Bill.objects.get(original=rent_bill.bill, user=request.user.id)
+    context['original_bill'] = context['split_bill'].original
+     -->
+
+<style>
+	.row .col-md-4 {
+		border: 1px solid rgba(86,61,124,.2);
+	}
+
+	.row .col-md-8 {
+		border: 1px solid rgba(86,61,124,.2);
+	}
+
+/*https://coderwall.com/p/z87nsq*/
+	.circular {
+		width: 100px;
+		height: 100px;
+		background-size: cover;
+		display: inline-block;
+		float: left;
+		border-radius: 50px;
+		-webkit-border-radius: 50px;
+		-moz-border-radius: 50px;
+	}
+
+	/*http://stackoverflow.com/questions/13596821/css-align-images-and-text-on-same-line*/
+	.debt-name {
+		display: inline-block;
+		vertical-align: middle;
+	}
+</style>
+
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h4>Recent Updates</h4>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-4">
+			<h2>$1234.56</h2> <br />
+			<h3>Balance</h3>
+		</div>
+		<div class="col-md-8" style="float:right">
+			<div class="row">
+				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
+				<h2 class="debt-name">Rent</h2>
+				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
+			</div>
+			<div class="row">
+				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
+				<h2 class="debt-name">Rent</h2>
+				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
+			</div>
+			<div class="row">
+				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
+				<h2 class="debt-name">Rent</h2>
+				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
+			</div>
+			<div class="row">
+				<img class="circular" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p200x200/10413317_848366055182480_3136895827114759177_n.jpg?oh=13bc23612545fe4fe578e79aef11d5cb&oe=548373B1&__gda__=1422670516_4f2c53ae0053efda8b5c82e4bf807e5e"/>
+				<h2 class="debt-name">Rent</h2>
+				<a href="#" alt="Pay the debt."><img style="float:right" src="https://s3.amazonaws.com/venmo/venmo100x100.jpg"/></a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h2>$1234.56</h2> <br />
+			<h3>Total Transaction</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h2>12,456</h2> <br />
+			<h3>Transaction Count</h3>
+		</div>
+	</div>
+</div>
 {% endblock content %}
 
 {% block sidebar %}
