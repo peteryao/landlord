@@ -12,17 +12,7 @@ from .models import Tenant, Unit, ToDoTask
 
 @login_required
 def add_task(request):
-    account_name = request.POST['account_name']
-    esport = request.POST['esport_value']
-
-    player_check = Player_esport.objects.filter(player=Player.objects.get(user=request.user), esport=ESPORT.objects.get(pk=esport))
-
-    if (player_check.count() == 0):
-        player_esport = Player_esport(player=Player.objects.get(user=request.user), esport=ESPORT.objects.get(pk=esport))
-        player_esport.save()
-    else:
-        player_esport = Player_esport.objects.get(player=Player.objects.get(user=request.user), esport=ESPORT.objects.get(pk=esport))
-
-    player_esport_addtional = Player_esport_additional(player=player_esport, username=account_name)
-    player_esport_addtional.save()
+    user = models.ForeignKey(User)
+    value = request.POST['amount']
+    reason = request.POST['name']
     return redirect(myesports)

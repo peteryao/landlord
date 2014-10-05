@@ -11,8 +11,8 @@ from unit.models import Unit
 class Bill(TimeStampedModel):
     user = models.ForeignKey(User)
     value = models.DecimalField(max_digits=7, decimal_places=2)
-    debt_type = models.CharField(max_length=24, choices=(('Rent', 'Rent'), ('Utilities', 'Utilities')), default='Rent')
-    date_due = models.DateField(default=datetime.now()+timedelta(days=7))
+    reason = models.CharField(max_length=256, default="Charge")
+    debt_typedate_due = models.DateField(default=datetime.now()+timedelta(days=7))
     is_paid = models.BooleanField(default=False)
 
     def _warning_time(self):
