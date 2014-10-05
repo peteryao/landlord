@@ -4,10 +4,12 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User, Permission
 from django.contrib.auth.decorators import login_required
 
+from faker import Factory
+import random
+
 from mgmt.models import Landlord
 from unit.models import Tenant, Unit
 from bill.models import Bill, Split_Bill, RentBill
-
 # Create your views here.
 def unit_index(request, unit_pk):
     context = {}
@@ -33,11 +35,13 @@ def set_rent(request, unit_pk):
 def update_rent(request, unit_pk):
     context = {}
     unit = Unit.objects.get(pk=unit_pk)
-    original = RentBill.objects.get(unit=unit.id, has_paid=False)
+    original = RentBill.objects.get(unit=unit.id, has_paid=False).bill
     for tenant in Tenant.objects.filter(unit=unit_pk):
         rent = request.POST['properties_' + str(tenant.id)]
-        if(Split_Bill.objects.filter(original=original.id, user=request.user.id, has_paid=False).exists()):
-            sBill = Split_Bill.objects.get(original=original.id, user=request.user.id, has_paid=False)
+        if(Split_Bill.objects.filter(original=original.id).exists()):
+            sBill = Split_Bill.objects.get(original=original.id, user=tenant.user.id)
             sBill.split = rent
             sBill.save()
+        else:
+            print "erorr"
     return redirect(unit_index, unit_pk)

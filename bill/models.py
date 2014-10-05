@@ -34,12 +34,3 @@ class Split_Bill(TimeStampedModel):
 
     def __unicode__(self):
         return "{} - {}".format(self.user.username, self.split)
-
-def show_me_the_money(sender, **kwargs):
-    ipn_obj = sender
-    # You need to check 'payment_status' of the IPN
-
-    if ipn_obj.payment_status == "Completed":
-        print "yay"
-
-payment_was_successful.connect(show_me_the_money)

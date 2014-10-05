@@ -37,9 +37,13 @@
 {% endblock content %}
 
 {% block sidebar %}
-<div class="nav nav-pills">
-    {% for x in units %}
-    <li{% if x.id = unit.id %} class="active"{% endif %}><a href="{% url 'single_unit' unit_pk=x.id %}" class="list-group-item{% if unit.pk == x.pk %} class="active"{% else %}"{% endif %}>{{x}}</a></li>
-    {% endfor %}
+<div class="row">
+    <ul class="nav nav-sidebar">
+        {% for x in units %}
+        <li{% if x.id = unit.id %} class="active"{% endif %}>
+            <a href="{% url 'single_unit' unit_pk=x.id %}">Unit {{x}}</a>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock sidebar %}

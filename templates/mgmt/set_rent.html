@@ -31,7 +31,7 @@
 </table>
 <div class="message"></div>
 
-<input type="submit" name="add" value="Confirm" id="rental-form" class="btn btn-primary pull-right">
+<input type="submit" name="add_lol" id="add_lol" value="Confirm" id="rental-form" class="btn btn-primary pull-right" disabled>
 </form>
 {% endblock content %}
 
@@ -57,13 +57,18 @@ $('.rent_sum').change(function () {
         var value = Number($(this).val());
         if (!isNaN(value)) sum += value;
         if (sum != {{active_unit.rent}}) {
-            $('#add-to-cart').prop("disabled", true)
+            $('#add_lol').prop("disabled", true)
         } else if (sum == {{active_unit.rent}}) {
-            $('#rental-form').prop("disabled", false);
+            $('#add_lol').prop("disabled", false);
         }
     });
     if (sum != {{active_unit.rent}})
-        $sumDisplay.html("You have entered $" + sum + ". The total must be {{active_unit.rent}} You will need to add $" + ({{active_unit.rent}} - sum)  );
+        $sumDisplay.html("You have entered $" + sum + ". The total must be {{active_unit.rent}} You will need to add $" + ({{active_unit.rent}} - sum))
+    else {
+        $sumDisplay.html("");
+        $('#add_lol').prop("disabled", false);
+    };
+
 
 });
 </script>
