@@ -19,12 +19,18 @@
         </tr>
     </thead>
     <tbody>
-    {% for tenant in unit_tenants %}
+    {% for tenant, split_bill in tenant_rent %}
         <tr>
-            <td>
-            </td>
+            <td>{{tenant}}</td>
+            <td>{{tenant.user.email}}</td>
+            <td>${{split_bill.split}}</td>
         </tr>
     {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Total = <br><strong>${{unit.rent}}</strong></td>
+        </tr>
     </tbody>
 </table>
 </div>
