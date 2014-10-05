@@ -5,8 +5,6 @@ from django.contrib.auth.models import User, Permission
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from paypal.standard.forms import PayPalPaymentsForm
-
 from mgmt.models import Landlord
 from unit.models import Tenant, Unit
 from bill.models import Bill, Split_Bill, RentBill
@@ -20,25 +18,6 @@ def unit_index(request, unit_pk):
     context['split_bill'] = Split_Bill.objects.filter(original=rent.bill)
     return render(request, 'mgmt/unit_index.html', context)
 
-def view_that_asks_for_money(request):
-
-    # What you want the button to do.
-    paypal_dict = {
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": "10000000.00",
-        "item_name": "name of the item",
-        "invoice": "unique-invoice-id",
-        # "notify_url": "https://www.example.com" + reverse('paypal-ipn'),
-        "return_url": "https://www.example.com/your-return-location/",
-        "cancel_return": "https://www.example.com/your-cancel-location/",
-
-    }
-
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {"form": form}
-    return render(request, "bill/payment.html", context)
-
 def moxtra_redirect(request):
     context = {}
 
@@ -48,3 +27,22 @@ def mtest(request):
     context = {}
 
     return render(request, 'bill/index.html', context)
+
+
+@login_required
+def add_bill_item(request):
+    tenant = Tenant.objects.get(user=request.user.id)
+    account_name = request.POST['account_name']
+    esport = request.POST['esport_value']
+
+    player_check = Player_esport.objects.filter(player=Player.objects.get(user=request.user), esport=ESPORT.objects.get(pk=esport))
+
+    if (player_check.count() == 0):
+        player_esport = Player_esport(player=Player.objects.get(user=request.user), esport=ESPORT.objects.get(pk=esport))
+        player_esport.save()
+    else:
+        player_esport = Player_esport.objects.get(player=Player.objects.get(user=request.user), esport=ESPORT.objects.get(pk=esport))
+
+    player_esport_addtional = Player_esport_additional(player=player_esport, username=account_name)
+    player_esport_addtional.save()
+    return redirect(myesports)

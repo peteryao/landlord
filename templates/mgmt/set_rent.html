@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+<h4>Update Rent - {{active_unit}}</h4>
+<form action="{% url 'management_update_rent' unit_pk=active_unit.id %}" method="post" id="rental-form">
+{% csrf_token %}
+<table class="table table-hover">
+    <tbody>
+        {% for tenant in unit_tenants %}
+        <tr>
+            <td><label for="rent_{{tenant.id}}" class="multilabel">{{tenant}} - {{tenant.user.email}}</label></td>
+            <td>
+            <div ng-controller="TodoCtrl{{tenant.id}}">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input class="form-control multiquantity rent_sum" type="number" step="0.01" value="{{even_split}}" name="properties_{{tenant.id}}" ng-model="rent_{{tenant.id}}">
+                    </div>
+                </div>
+            </div>
+            </td>
+            <td>
+                <input type="text" name="percent_{{tenant.id}}" disabled>{{total}}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="message"></div>
+
+<input type="submit" name="add" value="Confirm" id="rental-form" class="btn btn-primary pull-right">
+</form>
+{% endblock content %}
+
+{% block sidebar %}
+<div>
+    <ul class="nav nav-pills">
+    {% for unit in units %}
+        <li{% if unit.id == active_unit.id %} class="active"{% endif %}><a href="{% url 'single_unit' unit_pk=unit.id %}" class="list-group-item{% if forloop.first %} class="active"{% else %}"{% endif %}>{{unit}}</a></li>
+    {% endfor %}
+</div>
+{% endblock sidebar %}
+
+{% block script %}
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+<script type="text/javascript">
+var $form = $('#rental-form'),
+$summands = $form.find('.rent_sum'),
+$sumDisplay = $('.message');
+
+$('.rent_sum').change(function () {
+    var sum = 0;
+    $summands.each(function () {
+        var value = Number($(this).val());
+        if (!isNaN(value)) sum += value;
+        if (sum != {{active_unit.rent}}) {
+            $('#add-to-cart').prop("disabled", true)
+        } else if (sum == {{active_unit.rent}}) {
+            $('#rental-form').prop("disabled", false);
+        }
+    });
+    if (sum != {{active_unit.rent}})
+        $sumDisplay.html("You have entered $" + sum + ". The total must be {{active_unit.rent}} You will need to add $" + ({{active_unit.rent}} - sum)  );
+
+});
+</script>
+{% endblock script %}

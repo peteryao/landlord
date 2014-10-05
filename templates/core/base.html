@@ -18,7 +18,8 @@
     <link href="{{ STATIC_URL }}css/dashboard.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/bootstrap-modal-bs3patch.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/bootstrap-modal.css" rel="stylesheet">
-
+    {# <link href="{{ STATIC_URL }}css/slider.css" rel="stylesheet"> #}
+    {% block style %}{% endblock %}
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="{{ STATIC_URL }}js/ie-emulation-modes-warning.js"></script>
