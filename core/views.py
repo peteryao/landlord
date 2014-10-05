@@ -8,7 +8,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User, Permission
 from django.contrib.auth.decorators import login_required
 
-from mgmt.models import Landlord
+from mgmt.models import Landlord, Apartment
 from unit.models import Tenant, Unit
 from bill.models import RentBill, Split_Bill, Bill
 
@@ -35,10 +35,15 @@ def index(request):
     # If tenant
     if Tenant.objects.filter(user=request.user.id).exists():
         context['tenant'] = Tenant.objects.get(user=request.user.id)
+
         return render(request, 'unit/index.html', context)
 
     # Not logged in
     return render(request, 'landing/index.html', context)
+
+def registration_page(request):
+    context = {}
+    return render(request, 'core/registration.html', context)
 
 def login_user(request):
     username = request.POST['user_name']
@@ -47,7 +52,7 @@ def login_user(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            messages.add_message(request, messages.INFO, "Welcome back <strong>" + request.user.username + "</strong>!")
+            messages.add_message(request, messages.INFO, "Welcome back <strong>" + request.user.email + "</strong>!")
             return redirect(index)
         else:
             messages.add_message(request, messages.WARNING, "<strong>Error</strong>. Your account has been disabled, please contact Peter Yao.")
@@ -82,3 +87,12 @@ def venmo_payment(request, bill_pk):
     r = requests.post('https://api.venmo.com/v1/payments',data=payload)
 
     return redirect(index)
+
+@login_required
+def moxtra_todo_api(request):
+    binder_id = 'BzMr4O4chazF75u5cLUNCc2'
+
+    r = requests.post('https://api.moxtra.com/{}'.format(binder_id))
+    print r
+    return redirect('/')
+

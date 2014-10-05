@@ -20,7 +20,7 @@ if RentBill.objects.filter(unit=context['unit'], has_paid=False).exists():
     var client_id = "ulPImqICqYs";
     var client_secret = "mKB98J9rKRM";
     var timestamp = new Date().getTime();
-    var unique_id = "laksjdfl"; //Unique ID of how user is identified in your system
+    var unique_id = "laksjsldkjfsddfl"; //Unique ID of how user is identified in your system
 
     var hash = CryptoJS.HmacSHA256(client_id + unique_id + timestamp, client_secret);
     var hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
@@ -33,8 +33,8 @@ if RentBill.objects.filter(unit=context['unit'], has_paid=False).exists():
     function get_token() {
         var init_options = {
             uniqueid: unique_id,
-            firstname: "John",
-            lastname: "Doe",
+            firstname: "Peter",
+            lastname: "Yao",
             timestamp: timestamp,
             signature: signature,
             get_accesstoken: function(result) {

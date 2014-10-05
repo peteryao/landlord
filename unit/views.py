@@ -21,7 +21,6 @@ def add_task(request):
     user = request.user
     value = request.POST['amount']
     reason = request.POST['name']
-    print request.POST
     debt_typedate_due = datetime.strptime(request.POST['date_due'], '%m/%d/%Y')
 
     bill = Bill(user=user, value=value, reason=reason, debt_typedate_due=debt_typedate_due, is_paid=False)
