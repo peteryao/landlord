@@ -15,14 +15,16 @@ from bill.models import RentBill, Split_Bill, Bill
 # Create your views here.
 def index(request):
     context = {}
+    
+    # If landlord
     if Landlord.objects.filter(user=request.user.id).exists():
         return render(request, 'mgmt/index.html', context)
+        
+    # If tenant
     if Tenant.objects.filter(user=request.user.id).exists():
-        context['unit'] = Tenant.objects.get(user=request.user.id).unit
-        rent_bill = RentBill.objects.get(unit=context['unit'], has_paid=False)
-        context['split_bill'] = Split_Bill.objects.get(original=rent_bill.bill, user=request.user.id)
-        context['original_bill'] = context['split_bill'].original
-        return render(request, 'bill/index.html', context)
+        return render(request, 'unit/index.html', context)
+        
+    # Not logged in
     return render(request, 'core/index.html', context)
 
 def login_user(request):
