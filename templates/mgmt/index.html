@@ -2,6 +2,26 @@
 
 {% block content %}
 <h4>Recent Updates</h4>
+<table class="table table-hover">
+<thead>
+<tr>
+  <th></th>
+  <th>Email</th>
+  <th>Rent</th>
+  <th>Date Paid</th>
+</tr>
+</thead>
+<tbody>
+{% for event in updates %}
+<tr>
+  <td><img class="circular" src="{{event.venmo_photo}}"/></td>
+  <td>{{event.user.email}}</td>
+  <td>${{event.split}}</td>
+  <td>{{event.modified}}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
 {% endblock content %}
 
 {% block sidebar %}
